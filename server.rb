@@ -17,7 +17,7 @@ end
 srv.mount_proc('/') do |req, _res|
   File.open('detail.log', 'a+') do |f|
     f.puts Time.now.strftime('%Y.%m.%d %H:%M:%S:') +
-      req.path + ' ' + req.query_string
+      "#{req.request_method}:" + req.path.to_s + ' ' + req.query_string.to_s
     f.puts req.body
     f.puts req.header.inspect
   end
