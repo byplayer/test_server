@@ -18,8 +18,15 @@ srv.mount_proc('/') do |req, _res|
   File.open('detail.log', 'a+') do |f|
     f.puts Time.now.strftime('%Y.%m.%d %H:%M:%S:') +
       "#{req.request_method}:" + req.path.to_s + ' ' + req.query_string.to_s
+    f.puts '========== header =========>'
+    req.header.each do |k, v|
+      f.puts "\"#{k}\"=>#{v.inspect}"
+    end
+    f.puts '<========== header ========='
+
+    f.puts '========== body =========>'
     f.puts req.body
-    f.puts req.header.inspect
+    f.puts '<========== body ========='
   end
 end
 
