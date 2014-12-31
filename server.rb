@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 require 'webrick'
+require 'uri'
 
 srv = WEBrick::HTTPServer.new({ :DocumentRoot => './',
                                 :BindAddress => '127.0.0.1',
@@ -24,9 +25,17 @@ srv.mount_proc('/') do |req, _res|
     end
     f.puts '<========== header ========='
 
-    f.puts '========== body =========>'
+    f.puts '========== body[raw] =========>'
     f.puts req.body
-    f.puts '<========== body ========='
+    f.puts '<========== body[raw] ========='
+
+    f.puts '========== body[decode] =========>'
+    begin
+      f.puts URI.decode_www_form(req.body).inspect
+    rescue => e
+      f.puts "error: #{e}\n  " + e.backtrace.join("\n  ")
+    end
+    f.puts '<========== body[decode] ========='
   end
 end
 
